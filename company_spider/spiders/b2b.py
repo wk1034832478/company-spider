@@ -24,14 +24,14 @@ class B2bSpider(scrapy.Spider):
         for a in lias:
             url = a.css("::attr(href)").extract_first()
             if self.checkInBloom(url) == False:
-                self.bloom.add(url)
+                self.add(url)
                 yield scrapy.Request(url, callback=self.parse)
 
         lias = response.css(".page_tag.Baidu_paging_indicator a") 
         for a in lias:
             url = a.css("::attr(href)").extract_first()
             if self.checkInBloom(url) == False:
-                self.bloom.add(url)
+                self.add(url)
                 yield scrapy.Request(url, callback=self.parse)
             else:
                 print("重复的url")
@@ -41,7 +41,7 @@ class B2bSpider(scrapy.Spider):
             # 需要进一步爬取的内容
             url = a.css("::attr(href)").extract_first()
             if self.checkInBloom(url) == False:
-                self.bloom.add(url)
+                self.add(url)
                 yield scrapy.Request(url, callback=self.parse)
             else:
                 print("重复的url")
@@ -51,12 +51,18 @@ class B2bSpider(scrapy.Spider):
             # 需要进一步爬取的内容
             url = a.extract()
             if self.checkInBloom(url) == False:
-                self.bloom.add(url)
+                self.add(url)
                 yield scrapy.Request(url, callback=self.parse)
             else:
                 print("重复的url")
 
     def checkInBloom(self, url):
-        return url in self.bloom
+        return self.transferNonUnicode(url) in self.bloom
+    
+    def add(self, url):
+        self.bloom.add(self.transferNonUnicode(url))
+    
+    def transferNonUnicode(self, url):
+        return url.encode("utf-8")
         
        
