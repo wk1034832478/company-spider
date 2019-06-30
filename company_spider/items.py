@@ -9,6 +9,7 @@ import scrapy
 
 
 class CompanySpiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    id = scrapy.Field()
+    url = scrapy.Field()
+    name = scrapy.Field()
+    description =scrapy.Field()
